@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Spatie\Multitenancy\Models\Tenant;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+
+Route::domain('app.tenant.test')->group(function () {
+    Route::get('/', function () {
+        Tenant::all()->dd();
+    });
+});
+
+Route::domain('{tenant}.tenant.test')->middleware('tenant')->group(function () {
+    Route::get('/', function () {
+        dd(app('currentTenant')->name);
+    });
 });
